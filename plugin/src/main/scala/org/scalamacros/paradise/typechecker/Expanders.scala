@@ -134,7 +134,7 @@ trait Expanders {
       def rewrapAfterTransform(stat: Tree, transformed: List[Tree]): List[Tree] = (stat, transformed) match {
         case (stat @ DocDef(comment, _), Nil) => reporter.warning(stat.pos, "this documentation comment got destroyed during macro expansion"); Nil
         case (stat @ DocDef(comment, _), List(transformed: MemberDef)) => List(treeCopy.DocDef(stat, comment, transformed))
-        case (_, Nil | List(_: MemberDef)) => transformed
+        case (_, Nil | List(_: MemberDef) | List(_: DocDef)) => transformed
       }
       if (phase.id > currentRun.typerPhase.id || !stats.exists(mightNeedTransform)) stats
       else stats.flatMap(stat => {
